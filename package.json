@@ -1,0 +1,14 @@
+{
+  "name": "cahierdevie",
+  "version": "0.0.1",
+  "main": "app",
+  "dependencies": {
+    "connect": "2.7.X",
+    "express": "3.X.X",
+	"crypto": "0.X.X"
+  },
+  "engines": {
+	"node": "0.10.x",
+	"npm": "1.1.x"
+  }
+}
