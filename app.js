@@ -16,7 +16,7 @@ var express = require('express'),
 app.use(express.logger("dev"));
 
 app.use(express.bodyParser({
-    uploadDir: __dirname + '/uploads',
+    uploadDir: __dirname + '/tmp',
     keepExtensions: true
 }));
 
@@ -41,9 +41,9 @@ app.get('/test', function(req, res){
     res.write("ok");
     res.end();
 });
-app.get('/send-cahier/:id', main.addImage);
-app.post('/send-cahier/:id', main.addImage);
-app.post('/send-photo-cahier/:id', main.addImage);
+app.get('/send-cahier/:id', main.addCahier);
+app.post('/send-cahier/:id', main.addCahier);
+app.post('/send-picture-cahier/:id', main.addImage);
 
 
 
