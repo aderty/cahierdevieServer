@@ -5,7 +5,9 @@
   "dependencies": {
     "connect": "2.7.X",
     "express": "3.X.X",
-	"crypto": "0.X.X"
+	"crypto": "0.X.X",
+	"underscore": "1.X.X",
+	"async": "0.X.X"
   },
   "engines": {
 	"node": "0.10.x",

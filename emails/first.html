@@ -1,0 +1,34 @@
+<!-- invite.html -->
+<html>
+<head>
+  <title>Invite from Myapp</title>
+</head>
+<body>
+  <p>
+    Hi <%=idEnfant%> <%=date%>,
+  </p>
+  <p>
+    Myapp would like you to join it's network on <a href="http://myapp.com">Myapp.com</a>.
+    <br />
+    Please follow the link bellow to register:
+      <% _.each(events, function( event ){ %>
+        <h2><%=event.title%></h2>
+        <p><%=event.desc%></p>
+            <% _.each(event.pictures, function( picture ){ %>
+                <img src="<%=picture%>"></img>
+              <% }); %>
+      <% }); %>
+  </p>
+  <p>
+    <a href="http://myapp.com/register?invite=<%=id%>">http://myapp.com/register?invite=<%=id%></a>
+  </p>
+  <p>
+    Thank you,
+    <br />
+    Myapp Team
+  </p>
+  <p>
+    <a href="http://myapp.com"><img src="cid:logo@myapp" /></a>
+  </p>
+</body>
+</html>
