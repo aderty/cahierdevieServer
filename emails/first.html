@@ -1,16 +1,16 @@
 <!-- invite.html -->
 <html>
 <head>
-  <title>Invite from Myapp</title>
+  <title>Cahier de vie</title>
 </head>
 <body>
   <p>
-    Hi <%=idEnfant%> <%=date%>,
+    <%=idEnfant%> <%=date%>,
   </p>
   <p>
-    Myapp would like you to join it's network on <a href="http://myapp.com">Myapp.com</a>.
+    Blabla...
     <br />
-    Please follow the link bellow to register:
+    Evènements de la journée :
       <% _.each(events, function( event ){ %>
         <h2><%=event.title%></h2>
         <p><%=event.desc%></p>
@@ -23,9 +23,9 @@
     <a href="http://myapp.com/register?invite=<%=id%>">http://myapp.com/register?invite=<%=id%></a>
   </p>
   <p>
-    Thank you,
+    Merci,
     <br />
-    Myapp Team
+    Nounou team
   </p>
   <p>
     <a href="http://myapp.com"><img src="cid:logo@myapp" /></a>
