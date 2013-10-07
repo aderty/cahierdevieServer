@@ -103,7 +103,7 @@ exports.startListening = function() {
         if (filename) {
             var file = uploadsFolder + "/" + filename + "/" + filename + ".json"; 
             fs.readFile(file, function(err, data) { 
-                if (err) return; // Fichier de description non trouvé 
+                if (err) return console.log("Fichier json non disponible."); // Fichier de description non trouvé 
                 try { 
                     var cahier = JSON.parse(data); 
                 } catch (e) { 
@@ -114,9 +114,10 @@ exports.startListening = function() {
                 pendings[cahier.id] = setTimeout((function (info, file) {
                     return function () {
                         var nbPictures = info.nbPictures;
+                        
                         var folder = uploadsFolder + "/" + file + "/";
                         fs.readdir(folder, function (err, list) {
-                            if (err) return console.log("Problème lors de la lecture du rep " + file);
+                            if (err) return console.log("Problème lors de la lecture du rep " + file + err);
                             var pending = list.length;
                             // Les photos sont présentes -> Envois du mail 
                             if (pending > nbPictures) return sendMail(info.email, info, folder, list);
@@ -135,15 +136,16 @@ function sendMail(email, cahier, dossier, list) {
         list[i] = dossier + list[i];
     }
     i = 0;
-    async.forEach(list, function (item, callback) {
-        /*if (i > 0) {
-            transformPicture(item, function (err, data) {
+    async.forEach(list, function (item, callback) {   
+        if (i > 0) {
+            console.log("transform " + item);
+            return transformPicture(item, function (err, data) {
                 if (err) callback();
                 list[i++] = data;
                 callback();
             });
         }
-        i = 1;*/
+        i = 1;
         callback();
         // results is now an array of stats for each file
     }, function (err) {
@@ -170,11 +172,21 @@ function sendMail(email, cahier, dossier, list) {
     });   
 } 
 
-var data_uri_prefix = "data:image/jpg;base64,"; 
+var data_uri_prefix = "data:image/png;base64,"; 
 
 function transformPicture(picture, callback) { 
-    
-    fs.readFile(picture, function(err, data) { 
+    data = fs.readFileSync(picture, "utf8");
+    if (!data) callback("Fichier de description non trouvé"); // Fichier de description non trouvé 
+    try {
+        var buf = new Buffer(data);
+        var image = buf.toString('base64');
+        image = data_uri_prefix + image;
+        callback(null, image);
+    } catch (e) {
+        console.log("Problème de de la convertion en base64 de l'image " + picture);
+        callback("Problème de de la convertion en base64 de l'image " + picture);
+    }
+    /*fs.readFile(picture, function(err, data) { 
         if (err) callback(err); // Fichier de description non trouvé 
         try { 
             var buf = new Buffer(data);
@@ -185,7 +197,7 @@ function transformPicture(picture, callback) {
             console.log("Problème de de la convertion en base64 de l'image " + picture); 
             callback("Problème de de la convertion en base64 de l'image " + picture);
         } 
-    }); 
+    }); */
 } 
 
 /* 
