@@ -4,6 +4,7 @@ obj/
 My Project/
 Properties/
 sql/
+*.json
 !package.json
 *.sln
 *.suo
