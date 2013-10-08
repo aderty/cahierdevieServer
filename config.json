@@ -9,16 +9,14 @@
 		"host": "localhost",
 		"port": 3306
 	},
-    "secret": "inside consulting, come on guy !!!",
+    "secret": "cahier de vie, come on guy !!!",
 	"mail": {
-		"host": "smtp.laposte.net",
-		"secureConnection": true,
-		"port": 465,
+		"service: "Gmail",
 		"auth": {
-			"user": "footmap",
-			"pass": "infomilf00t"
+			"user": "cahierdevie1@gmail.com",
+			"pass": "infomil2013"
 		},
-		"defaultFromAddress": "footmap@laposte.net"
+		"defaultFromAddress": "cahierdevie1@gmail.com"
     },
 	"admin": "julien.goblet@gmail.com"
 }
