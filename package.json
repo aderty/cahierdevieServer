@@ -4,7 +4,7 @@
   "main": "app",
   "dependencies": {
     "connect": "2.7.X",
-    "express": "3.X.X",
+    "express": "3.0.3",
 	"crypto": "0.X.X",
 	"underscore": "1.X.X",
 	"nodemailer": "X.X.X"
