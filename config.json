@@ -11,7 +11,7 @@
 	},
     "secret": "cahier de vie, come on guy !!!",
 	"mail": {
-		"service: "Gmail",
+		"service": "Gmail",
 		"auth": {
 			"user": "cahierdevie1@gmail.com",
 			"pass": "infomil2013"

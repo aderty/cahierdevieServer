@@ -28,7 +28,7 @@ var smtpTransport = nodemailer.createTransport("SMTP", options);
 
 exports.send = function (email, cahier, dossier, list, callback) {
     var templatePath = "./emails/first.html",
-    templateContent = fs.readFileSync(templatePath, "utf8");
+    templateContent = fs.readFileSync(templatePath);
     var data = cahier;
     console.log("Génération du mail...");
     var html = _.template(templateContent, data);//, { interpolate: /\{\{(.+?)\}\}/g });
