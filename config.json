@@ -1,0 +1,24 @@
+﻿{
+    "env": {
+        "PORT": 1480
+    },
+    "db": {
+		"user": "inside",
+		"password": "insIde_01",
+		"database": "inside",
+		"host": "localhost",
+		"port": 3306
+	},
+    "secret": "inside consulting, come on guy !!!",
+	"mail": {
+		"host": "smtp.laposte.net",
+		"secureConnection": true,
+		"port": 465,
+		"auth": {
+			"user": "footmap",
+			"pass": "infomilf00t"
+		},
+		"defaultFromAddress": "footmap@laposte.net"
+    },
+	"admin": "julien.goblet@gmail.com"
+}

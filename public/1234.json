@@ -1,0 +1,23 @@
+{
+	"titre": "titire 2",
+	"desc": "22dfdsf ezf2",
+	"events": [
+		{
+			"titre": "dfdffezfze 11",		
+			"desc": "dfdffezfze 11",
+			"pictures": ["/totot/datepicker2.jpg"]		
+		},
+		{
+			"titre": "dfdffezfze 12",		
+			"desc": "dfdffezfze 12",
+			"pictures": []		
+		},
+		{
+			"titre": "dfdffezfze 12",		
+			"desc": "dfdffezfze 1133",
+			"pictures": ["/totot/datepicker.jpg"]		
+		}
+	],
+	"email": "toto@dfdf.com",
+	"nbPictures": 1
+}
