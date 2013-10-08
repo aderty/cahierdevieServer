@@ -28,10 +28,18 @@ var smtpTransport = nodemailer.createTransport("SMTP", options);
 
 exports.send = function (email, cahier, dossier, list, callback) {
     var templatePath = "./emails/first.html",
-    templateContent = fs.readFileSync(templatePath);
+    templateContent = fs.readFileSync(templatePath, "utf8");
     var data = cahier;
     console.log("Génération du mail...");
-    var html = _.template(templateContent, data);//, { interpolate: /\{\{(.+?)\}\}/g });
+    
+    try{
+        var html = _.template(templateContent, data);//, { interpolate: /\{\{(.+?)\}\}/g });
+    }
+    catch (e) {
+        console.log(e);
+        callback(e);
+        return;
+    }
     console.log("Mail généré");
     // setup e-mail data with unicode symbols
     var mailOptions = {
@@ -41,9 +49,6 @@ exports.send = function (email, cahier, dossier, list, callback) {
         html: html // html body
     }
 
-    /*var to = __dirname + '/tmp/toto.html';
-    fs.writeFile(to, html, function (err) {
-    });*/
 
     // send mail with defined transport object
     smtpTransport.sendMail(mailOptions, function (error, response) {

@@ -11,9 +11,7 @@
 	},
     "secret": "cahier de vie, come on guy !!!",
 	"mail": {
-		"host": "smtp.gmail.com",
-		"secureConnection": true,
-		"port": 465,
+		"service": "Gmail",
 		"auth": {
 			"user": "cahierdevie1@gmail.com",
 			"pass": "infomil2013"
