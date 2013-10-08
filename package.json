@@ -7,7 +7,7 @@
     "express": "3.X.X",
 	"crypto": "0.X.X",
 	"underscore": "1.X.X",
-	"async": "0.X.X"
+	"nodemailer": "X.X.X"
   },
   "engines": {
 	"node": "0.10.x",
