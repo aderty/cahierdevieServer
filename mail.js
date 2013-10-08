@@ -41,6 +41,10 @@ exports.send = function (email, cahier, dossier, list, callback) {
         html: html // html body
     }
 
+    /*var to = __dirname + '/tmp/toto.html';
+    fs.writeFile(to, html, function (err) {
+    });*/
+
     // send mail with defined transport object
     smtpTransport.sendMail(mailOptions, function (error, response) {
         if (error) {
