@@ -36,11 +36,11 @@ app.configure('production', function(){
 //app.post('/data-users/:id', routes.users.update);
  
 // Ajout via POST
-/*app.get('/test', function(req, res){
+app.get('/test', function(req, res){
     console.log("test");
     res.write("ok");
     res.end();
-});*/
+});
 app.get('/send-cahier/:id', main.addCahier);
 app.post('/send-cahier/:id', main.addCahier);
 app.post('/send-picture-cahier/:id', main.addImage);
