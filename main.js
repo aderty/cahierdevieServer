@@ -113,15 +113,15 @@ exports.addImage = function(req, res, next) {
                 }
             }
         }
-        if (pendingsCahier[id].nbFichierReceived < pendingsCahier[id].nbPictures || pendingsCahier[cahier.id].sent) {
+        if (pendingsCahier[id].nbFichierReceived < pendingsCahier[id].nbPictures || pendingsCahier[id].sent) {
             return;
         }
-
+        
         if (pendingsCahier[id].sending) clearTimeout(pendingsCahier[id].sending);
 
         pendingsCahier[id].sending = setTimeout((function(cahier) {
             return function() {
-                pendingsCahier[cahier.id].sent = true;
+                pendingsCahier[cahier.uid].sent = true;
                 // Les photos sont présentes -> Envois du mail
                 sendMail(cahier.email, cahier);
             }
@@ -171,7 +171,7 @@ function transformPicture(picture, callback) {
         //image = data_uri_prefix + image;
         callback(null, image);
     } catch (e) {
-        console.log("Problème de de la convertion en base64 de l'image " + picture);
+        console.log(e);
         callback("Problème de de la convertion en base64 de l'image " + picture);
     }
 } 
