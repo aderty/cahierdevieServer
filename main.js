@@ -73,7 +73,7 @@ exports.addImage = function(req, res, next) {
     var file = req.files.file,
         filePath = file.path,
         fileName = file.name,
-        lastIndex = filePath.lastIndexOf("/"),
+        lastIndex = fileName.lastIndexOf("."),
         id = req.params.id;
 
     if (!id || !pendingsCahier[id]) {
