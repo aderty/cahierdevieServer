@@ -84,7 +84,7 @@ exports.addImage = function(req, res, next) {
 
     pendingsCahier[id].nbFichierReceived = pendingsCahier[id].nbFichierReceived + 1;
 
-    transformPicture(filePath, function(err, data) {
+    fs.readFile(filePath, function (err, data) {
         if (err) {
             console.log(err);
             return;
@@ -93,13 +93,15 @@ exports.addImage = function(req, res, next) {
         var cid = fileName + "@cahierdevie";
         pendingsCahier[id].medias.push({
             filename: fileName,
+            filePath: filePath,
             contents: data,
             cid: cid
         });
 
-        fs.unlink(filePath, function(err) {
+        /*fs.unlink(filePath, function(err) {
             if (err) throw err;
-        });
+        });*/
+
         var i = 0, l = pendingsCahier[id].events.length;
         for (; i < l; i++) {
             if (!pendingsCahier[id].events[i].transform) {
@@ -156,7 +158,21 @@ function sendMail(email, cahier) {
 
     mail.send(email, cahier, null, null, function(err) {
         if (err) console.log(err);
+        var files = [];
+        if(cahier.medias.length > 0){
+            var i = 0, l = cahier.medias.length;
+            for (; i < l; i++) {
+                files.push(cahier.medias[i].filePath);
+            }
+        }
         delete pendingsCahier[cahier.uid];
+
+        var i = 0, l = files.length;
+        for (; i < l; i++) {
+            fs.unlink(files[i], function (err) {
+                if (err) console.log(err);
+            });
+        }
     });
 }
 
