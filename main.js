@@ -49,8 +49,16 @@ exports.addCahier = function(req, res, next) {
         }
         cahier.uid = id;
         cahier.nbFichierReceived = 0;
-
+        cahier.medias = [];
         pendingsCahier[id] = cahier;
+
+        pendingsCahier[id].sending = setTimeout((function(id) {
+            return function() {
+                pendingsCahier[id].sent = true;
+                // Envois du mail au bout de 3 min si les médias ne sont pas encore arrivés.
+                sendMail(pendingsCahier[id].email, pendingsCahier[id]);
+            }
+        })(id), 180000);
 
         res.write("ok");
         res.end();
@@ -81,6 +89,14 @@ exports.addImage = function(req, res, next) {
             console.log(err);
             return;
         }
+
+        var cid = fileName + "@cahierdevie";
+        pendingsCahier[id].medias.push({
+            filename: fileName,
+            contents: data,
+            cid: cid
+        });
+
         fs.unlink(filePath, function(err) {
             if (err) throw err;
         });
@@ -92,12 +108,12 @@ exports.addImage = function(req, res, next) {
             var j = 0, k = pendingsCahier[id].events[i].pictures.length;
             for (; j < k; j++) {
                 if (pendingsCahier[id].events[i].transform.indexOf(j) == -1 && pendingsCahier[id].events[i].pictures[j].indexOf(fileName) > -1) {
-                    pendingsCahier[id].events[i].pictures[j] = data;
+                    pendingsCahier[id].events[i].pictures[j] = "cid:" + cid;
                     pendingsCahier[id].events[i].transform.push(j);
                 }
             }
         }
-        if (pendingsCahier[id].nbFichierReceived < pendingsCahier[id].nbPictures) {
+        if (pendingsCahier[id].nbFichierReceived < pendingsCahier[id].nbPictures || pendingsCahier[cahier.id].sent) {
             return;
         }
 
@@ -105,6 +121,7 @@ exports.addImage = function(req, res, next) {
 
         pendingsCahier[id].sending = setTimeout((function(cahier) {
             return function() {
+                pendingsCahier[cahier.id].sent = true;
                 // Les photos sont présentes -> Envois du mail
                 sendMail(cahier.email, cahier);
             }
@@ -141,21 +158,6 @@ function sendMail(email, cahier) {
         if (err) console.log(err);
         delete pendingsCahier[cahier.uid];
     });
-    
-    /*var to = __dirname + '/tmp/toto.html';
-    var contenu = "<html><body>";
-    var i = 0, l = pendingsCahier[cahier.uid].events.length;
-    for (; i < l; i++) {
-        var j = 0, k = pendingsCahier[cahier.uid].events[i].pictures.length;
-        for (; j < k; j++) {
-            contenu = contenu + "<img src='" + pendingsCahier[cahier.uid].events[i].pictures[j] + "' />";
-        }
-    }
-    contenu = contenu + "</body></html>";
-    fs.writeFile(to, contenu, function(err) {
-    });
-    delete pendingsCahier[cahier.uid];
-    */
 }
 
 var data_uri_prefix = "data:image/jpg;base64,"; 
@@ -166,7 +168,7 @@ function transformPicture(picture, callback) {
     try {
         var buf = new Buffer(data, 'binary');
         var image = buf.toString('base64');
-        image = data_uri_prefix + image;
+        //image = data_uri_prefix + image;
         callback(null, image);
     } catch (e) {
         console.log("Problème de de la convertion en base64 de l'image " + picture);

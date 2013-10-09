@@ -24,16 +24,15 @@ var options = extend({
 }, config.mail);
 
 // create reusable transport method (opens pool of SMTP connections)
-var smtpTransport = nodemailer.createTransport("SMTP", options);
+var smtpTransport = nodemailer.createTransport("SMTP", options),
 
-exports.send = function (email, cahier, dossier, list, callback) {
-    var templatePath = "./emails/first.html",
-    templateContent = fs.readFileSync(templatePath, "utf8");
-    var data = cahier;
+templatePath = "./emails/first.html",
+templateContent = fs.readFileSync(templatePath, "utf8");
+
+exports.send = function(email, data, dossier, list, callback) {
     console.log("Génération du mail...");
-    
-    try{
-        var html = _.template(templateContent, data);//, { interpolate: /\{\{(.+?)\}\}/g });
+    try {
+        var html = _.template(templateContent, data); //, { interpolate: /\{\{(.+?)\}\}/g });
     }
     catch (e) {
         console.log(e);
@@ -48,10 +47,33 @@ exports.send = function (email, cahier, dossier, list, callback) {
         subject: "Cahier de vie", // Subject line
         html: html // html body
     }
+    if (data.medias.length > 0) {
+        mailOptions.attachments = data.medias;
+    }
+    /*
+    var mailOptions = {   
+    from: config.mail.defaultFromAddress, //"footmap@laposte.net", // sender address
+    to: email, // list of receivers
+    subject: "Cahier de vie", // Subject line
+    html: html, // html body
+    attachments: [  
+    {   
+    filename: "somepicture.jpg",    
+    contents: new Buffer(data, 'base64'),   
+    cid: "logo@myapp"    
+    }   
+    ]   
+    };
+    // <img src="cid:logo@myapp" />
+    // Make sure you set Content-Type: multipart/mixed; , boundary and Content-Transfer-Encoding: base64
+    */
 
+    /*var to = __dirname + '/tmp/toto.html';
+    fs.writeFile(to, html, function (err) {
+    });*/
 
     // send mail with defined transport object
-    smtpTransport.sendMail(mailOptions, function (error, response) {
+    smtpTransport.sendMail(mailOptions, function(error, response) {
         if (error) {
             callback(error);
         } else {
