@@ -45,7 +45,7 @@ exports.send = function(email, data, dossier, list, callback) {
         from: config.mail.defaultFromAddress, //"footmap@laposte.net", // sender address
         to: email, // list of receivers
         subject: "Cahier de vie", // Subject line
-        text: "[cid:datepicker.jpg@01CE0DEB.1331CEB0]",
+        text: "Cahier de vie",
         html: html // html body
     }
     if (data.medias.length > 0) {

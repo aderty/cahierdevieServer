@@ -58,7 +58,7 @@ exports.addCahier = function(req, res, next) {
                 // Envois du mail au bout de 3 min si les médias ne sont pas encore arrivés.
                 sendMail(pendingsCahier[id].email, pendingsCahier[id]);
             }
-        })(id), 180000);
+        })(id), pendingsCahier[id].nbPictures > 0 ? 180000 : 0); // Envois immédiat si 0 photos
 
         res.write("ok");
         res.end();
@@ -89,7 +89,7 @@ exports.addImage = function(req, res, next) {
             console.log(err);
             return;
         }
-
+        //fileName.substring(0, lastIndex);//  + "@cahierdevie";
         var cid = fileName + "@01CE0DEB.1331CEB0";
         pendingsCahier[id].medias.push({
             filename: fileName,
