@@ -9,9 +9,10 @@ var servers = config.servers;
 exports.getConfig = function(req, res, next) {
     console.log("demande de config");
 
-    var id = req.params.id || req.body.id;
+    var id = 'toto';//req.params.id || req.body.id;
 
     res.json({ id: id, urlUpload: nextServer(), state: [] });
+    res.end();
 };
 
 function nextServer() {
