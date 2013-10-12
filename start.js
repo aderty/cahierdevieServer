@@ -9,8 +9,10 @@ var servers = config.servers;
 exports.getConfig = function(req, res, next) {
     console.log("demande de config");
 
-    var id = 'toto';//req.params.id || req.body.id;
-
+    var id = req.params.id || req.body.id;
+    console.log(id);
+    
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json({ id: id, urlUpload: nextServer(), state: [] });
     res.end();
 };
