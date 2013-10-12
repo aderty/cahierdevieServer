@@ -18,5 +18,8 @@
 		},
 		"defaultFromAddress": "cahierdevie1@gmail.com"
     },
-	"admin": "julien.goblet@gmail.com"
+	"admin": "julien.goblet@gmail.com",
+	"servers": [
+		"upload.moncahierdevie.com"
+	]
 }

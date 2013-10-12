@@ -9,7 +9,8 @@ var config = require('./config.json');
 var express = require('express'),
     http = require('http'),
     path = require('path'),
-    main = require('./main'),
+    publish = require('./publish'),
+    start = require('./start'),
     PORT = process.env.PORT || config.env.PORT,
     app = express();
 
@@ -41,14 +42,17 @@ app.get('/test', function(req, res){
     res.write("ok");
     res.end();
 });
-app.get('/send-cahier/:id', main.addCahier);
-app.post('/send-cahier/:id', main.addCahier);
-app.post('/send-picture-cahier/:id', main.addImage);
+app.get('/send-cahier/:id', publish.addCahier);
+app.post('/send-cahier/:id', publish.addCahier);
+app.post('/send-picture-cahier/:id', publish.addImage);
+
+app.get('/getConfig/:id', start.getConfig);
+app.post('/getConfig', start.getConfig);
 
 
 
-app.post('/images', main.addImage); // endpoint to post new images
-app.get('/images', main.getImages); // endpoint to get list of images
+app.post('/images', publish.addImage); // endpoint to post new images
+app.get('/images', publish.getImages); // endpoint to get list of images
 
 if (!module.parent) {
     app.listen(PORT);
