@@ -30,5 +30,13 @@
 			"pass": "infomil2013"
 		},
 		"defaultFromAddress": "moncahierdevie3@gmail.com"
+    },
+	{
+		"service": "Gmail",
+		"auth": {
+			"user": "moncahierdevie4@gmail.com",
+			"pass": "infomil2013"
+		},
+		"defaultFromAddress": "moncahierdevie4@gmail.com"
     }
 ]
