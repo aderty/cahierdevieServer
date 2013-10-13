@@ -1,0 +1,34 @@
+﻿[
+	{
+		"service": "Gmail",
+		"auth": {
+			"user": "cahierdevie1@gmail.com",
+			"pass": "infomil2013"
+		},
+		"defaultFromAddress": "cahierdevie1@gmail.com"
+    },
+	{
+		"service": "Gmail",
+		"auth": {
+			"user": "moncahierdevie1@gmail.com",
+			"pass": "infomil2013"
+		},
+		"defaultFromAddress": "moncahierdevie1@gmail.com"
+    },
+	{
+		"service": "Gmail",
+		"auth": {
+			"user": "moncahierdevie2@gmail.com",
+			"pass": "infomil2013"
+		},
+		"defaultFromAddress": "moncahierdevie2@gmail.com"
+    },
+	{
+		"service": "Gmail",
+		"auth": {
+			"user": "moncahierdevie3@gmail.com",
+			"pass": "infomil2013"
+		},
+		"defaultFromAddress": "moncahierdevie3@gmail.com"
+    }
+]

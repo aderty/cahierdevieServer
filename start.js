@@ -1,10 +1,9 @@
 var fs = require('fs'),
     //async = require('async'),
     _ = require('underscore'),
-    config = require('./config.json');
+    servers = require('./servers.json');
 
 var serversIndex = 0;
-var servers = config.servers;
 
 exports.getConfig = function(req, res, next) {
     console.log("demande de config");

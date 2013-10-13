@@ -28,6 +28,9 @@ exports.addCahier = function(req, res, next) {
     fs.readFile(filePath, function(err, data) {
         if (err) {
             console.log(err);
+            fs.unlink(filePath, function (err) {
+                if (err) console.log(err);
+            });
             res.write("ko");
             res.end();
             return;
@@ -77,6 +80,9 @@ exports.addImage = function(req, res, next) {
         id = req.params.id;
 
     if (!id || !pendingsCahier[id]) {
+        fs.unlink(filePath, function (err) {
+            if (err) console.log(err);
+        });
         res.write("ko");
         res.end();
         return;

@@ -1,7 +1,10 @@
 var fs = require('fs'),
     nodemailer = require('nodemailer'),
     _ = require('underscore'),
-    config = require('./config.json');
+    config = require('./config.json'),
+    mails = require('./mails.json');
+
+var mailsIndex = 0;
 
 function extend(dest, from) {
     var props = Object.getOwnPropertyNames(from), destination;
@@ -19,15 +22,30 @@ function extend(dest, from) {
     });
     return dest;
 }
-var options = extend({
+/*var options = extend({
     //service: "Gmail",
-}, config.mail);
+}, config.mail);*/
+
+function nextMail() {
+    var mail = mails[mailsIndex];
+    if (mailsIndex == mails.length - 1) {
+        mailsIndex = 0;
+    }
+    else {
+        mailsIndex = mailsIndex + 1;
+    }
+    return mail;
+}
 
 // create reusable transport method (opens pool of SMTP connections)
-var smtpTransport = nodemailer.createTransport("SMTP", options),
-
-templatePath = "./emails/first.html",
+//var smtpTransport = nodemailer.createTransport("SMTP", options);
+var templatePath = "./emails/first.html",
 templateContent = fs.readFileSync(templatePath, "utf8");
+
+var i = 0, l = mails.length;
+for (; i < l; i++) {
+    mails[i] = nodemailer.createTransport("SMTP", mails[i]);
+}
 
 exports.send = function(email, data, dossier, list, callback) {
     console.log("Génération du mail...");
@@ -74,7 +92,7 @@ exports.send = function(email, data, dossier, list, callback) {
     });*/
 
     // send mail with defined transport object
-    smtpTransport.sendMail(mailOptions, function(error, response) {
+    nextMail().sendMail(mailOptions, function (error, response) {
         if (error) {
             callback(error);
         } else {
