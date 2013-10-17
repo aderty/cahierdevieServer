@@ -96,7 +96,7 @@ exports.addImage = function(req, res, next) {
             return;
         }
         //fileName.substring(0, lastIndex);//  + "@cahierdevie";
-        var cid = fileName + "@01CE0DEB.1331CEB0";
+        var cid = fileName + "@moncahierdevie." + new Date().getTime();
         pendingsCahier[id].medias.push({
             filename: fileName,
             filePath: filePath,

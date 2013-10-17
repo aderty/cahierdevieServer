@@ -68,7 +68,7 @@ border: 2px solid rgb(41, 124, 44);
         </div>
         <div class="pictures">
             <% _.each(event.pictures, function( picture ){ %>
-                <img src="<%=picture%>" style="height: 250px;" />
+                <img src="<%=picture%>" alt="<%=event.title%>" style="height: 250px;" />
               <% }); %>
         </div>
       </li>
