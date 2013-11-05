@@ -138,7 +138,27 @@ exports.addImage = function(req, res, next) {
     res.write("ok");
     res.end();
 
-}; 
+};
+
+exports.toBase64 = function (req, res, next) {
+
+    console.log("toBase64 picture");
+
+    var file = req.files.file,
+        filePath = file.path,
+        fileName = file.name,
+        lastIndex = filePath.lastIndexOf("/");
+
+
+    transformPicture(filePath, function (err, data) {
+        var to = __dirname + '/tmp/img.txt';
+        fs.writeFile(to, data, function (err) {
+        });
+    });
+    res.write("ok");
+    res.end();
+
+};
 
 function copyFile(from, to, callback) { 
     fs.readFile(from, function(err, data) { 
@@ -190,7 +210,7 @@ function transformPicture(picture, callback) {
     try {
         var buf = new Buffer(data, 'binary');
         var image = buf.toString('base64');
-        //image = data_uri_prefix + image;
+        image = data_uri_prefix + image;
         callback(null, image);
     } catch (e) {
         console.log(e);
