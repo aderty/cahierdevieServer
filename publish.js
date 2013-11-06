@@ -199,6 +199,7 @@ function sendMail(email, cahier) {
                 if (err) console.log(err);
             });
         }
+
     });
 }
 
