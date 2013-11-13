@@ -47,7 +47,7 @@ app.get('/send-cahier/:id', publish.addCahier);
 app.post('/send-cahier/:id', publish.addCahier);
 app.post('/send-picture-cahier/:id', publish.addImage);
 
-//app.post('/update-email', mail.updateEmail);
+app.post('/update-email', mail.updateEmail);
 
 app.get('/getConfig/:id', start.getConfig);
 app.options('/getConfig', function(req, res, next) {

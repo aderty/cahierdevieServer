@@ -203,7 +203,7 @@ function sendMail(email, cahier) {
     });
 }
 
-var data_uri_prefix = "data:image/jpg;base64,"; 
+var data_uri_prefix = "data:image/jpg;base64,"; // Préfixe
 
 function transformPicture(picture, callback) { 
     data = fs.readFileSync(picture);

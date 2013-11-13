@@ -3,7 +3,7 @@ var fs = require('fs'),
     _ = require('underscore'),
     servers = require('./servers.json');
 
-var serversIndex = 0;
+var serversIndex = 0; // Index
 
 exports.getConfig = function(req, res, next) {
     console.log("demande de config");
