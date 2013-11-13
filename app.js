@@ -36,20 +36,29 @@ app.configure('production', function(){
  
 // Mise à jour via POST
 //app.post('/data-users/:id', routes.users.update);
- 
+console.log("Mise en place des routes");
 // Ajout via POST
 app.get('/test', function(req, res){
     console.log("test");
     res.write("ok");
     res.end();
 });
+console.log("/test -> OK");
 app.get('/send-cahier/:id', publish.addCahier);
+console.log("/send-cahier GET -> OK");
+
 app.post('/send-cahier/:id', publish.addCahier);
+console.log("/send-cahier POST -> OK");
+
 app.post('/send-picture-cahier/:id', publish.addImage);
+console.log("/send-picture-cahier POST -> OK");
 
 app.post('/update-email', mail.updateEmail);
+console.log("/update-email POST -> OK");
 
 app.get('/getConfig/:id', start.getConfig);
+console.log("/getConfig GET -> OK");
+
 app.options('/getConfig', function(req, res, next) {
         console.log('!OPTIONS');
         var headers = {};
@@ -64,12 +73,15 @@ app.options('/getConfig', function(req, res, next) {
         res.end();
         return;
 });
+console.log("/getConfig OPTIONS -> OK");
+
 app.post('/getConfig', start.getConfig);
+console.log("/getConfig POST -> OK");
 
 
 
-app.post('/images', publish.addImage); // endpoint to post new images
-app.get('/images', publish.getImages); // endpoint to get list of images
+//app.post('/images', publish.addImage); // endpoint to post new images
+//app.get('/images', publish.getImages); // endpoint to get list of images
 
 if (!module.parent) {
     app.listen(PORT);
