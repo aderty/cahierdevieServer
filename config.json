@@ -3,11 +3,11 @@
         "PORT": 1480
     },
     "db": {
-		"user": "inside",
-		"password": "insIde_01",
-		"database": "inside",
-		"host": "localhost",
-		"port": 3306
+		"user": "default",
+		"password": "infomil2013",
+		"database": "cahierdevie",
+		"host": "ds053958.mongolab.com",
+		"port": 53958
 	},
     "secret": "cahier de vie, come on guy !!!",
 	"mail": {

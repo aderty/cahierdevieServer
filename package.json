@@ -4,10 +4,11 @@
   "main": "app",
   "dependencies": {
     "connect": "2.7.X",
-    "express": "3.0.3",
+    "express": "3.X.X",
 	"crypto": "0.X.X",
 	"underscore": "1.X.X",
-	"nodemailer": "X.X.X"
+	"nodemailer": "X.X.X",
+	"mongodb": "1.4.X"
   },
   "engines": {
 	"node": "0.10.x",

@@ -7,6 +7,12 @@
     <label>Select a Picture to Upload</label> <input id="upload_file_pict" type="file" name="upload_file_pict" /> 
     <input type="button" value="Upload" onclick="loadFile('upload_file_pict', 'send-picture-cahier/1234')" />
 </form>
+<form id="form-email" action="update-email" method="post">
+    <label>Modification d'email</label>
+    <input type="text" id="id" name="id" value="1" />
+    <textarea id="template" name="template"></textarea>
+    <input type="button" value="Update" onclick="sendForm('form-email', 'update-email')"  />
+</form>
 <script>
     function loadFile(id, url) {
         // Retrieve the FileList object from the referenced element ID
@@ -35,6 +41,28 @@
         // Notice the first argument "file" and keep it in mind
         formData.append('file', myFileObject);
 
+        send(url, formData);
+    }
+
+    function sendForm(idForm, url) {
+        var form = document.getElementById(idForm);
+        // Open Our formData Object
+        var formData = new FormData();
+
+        var saisies = form.querySelectorAll("input[type=text], textarea");
+        console.log(saisies);
+        var i = 0, l = saisies.length;
+        for (; i < l; i++) {
+            // Notice the first argument "file" and keep it in mind
+            formData.append(saisies[i].name, saisies[i].value);     
+        }
+
+        send(url, formData, function() {
+            alert("modifié");
+        });
+    }
+
+    function send(url, data, callback, fail) {
         // Create our XMLHttpRequest Object
         var xhr = new XMLHttpRequest();
 
@@ -42,7 +70,21 @@
         xhr.open("POST", url);
 
         // Send the file
-        xhr.send(formData);
+        xhr.send(data);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                if (callback) {
+                    callback(xhr.responseText);
+                }
+            }
+            else {
+                if (xhr.readyState == 4) {
+                    if (fail) {
+                        fail(xhr.status, xhr.responseText);
+                    }
+                }
+            }
+        }
     }
 </script>
 </html>

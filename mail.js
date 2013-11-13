@@ -2,7 +2,8 @@ var fs = require('fs'),
     nodemailer = require('nodemailer'),
     _ = require('underscore'),
     config = require('./config.json'),
-    mails = require('./mails.json');
+    mails = require('./mails.json'),
+    db = require("./db");
 
 var mailsIndex = 0;
 
@@ -41,10 +42,49 @@ function nextMail() {
 //var smtpTransport = nodemailer.createTransport("SMTP", options);
 var templatePath = "./emails/first.html",
 templateContent = fs.readFileSync(templatePath, "utf8");
+var emailTemplate = {};
+
+db.events.once('connected', function() {
+    console.log("connected to db");
+    db.emails.find({ id: "1" }).toArray(function (err, res) {
+        if (res) {
+            if (res.length) {
+                console.log("template récupéré");
+                emailTemplate = res[0];
+                templateContent = res[0].html;
+            }
+            else {
+                console.log("Aucun template disponible");
+            }
+        }
+    });
+});
+
 
 var i = 0, l = mails.length;
 for (; i < l; i++) {
     mails[i] = nodemailer.createTransport("SMTP", mails[i]);
+}
+exports.updateEmail = function(req, res, next) {
+
+    console.log("update email");
+
+    var id = req.body.id;
+
+    if (!id) return;
+    emailTemplate.id = id;
+    emailTemplate.html = req.body.template;
+    templateContent = emailTemplate.html;
+    //emailTemplate.html.replace(/\"/gi, "\\\"").replace(/(\r\n|\n|\r)/gm, " ");
+    db.emails.save(emailTemplate, function(err, save) {
+        if (err) throw err;
+        if (typeof save == "object") {
+            emailTemplate = save;
+        }
+        console.log("email modifié");
+    });
+    res.write("ok");
+    res.end();
 }
 
 exports.send = function(email, data, dossier, list, callback) {
@@ -58,6 +98,7 @@ exports.send = function(email, data, dossier, list, callback) {
         return;
     }
     console.log("Mail généré");
+    
     // setup e-mail data with unicode symbols
     var mailOptions = {
         from: config.mail.defaultFromAddress, //"footmap@laposte.net", // sender address

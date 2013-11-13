@@ -1,4 +1,4 @@
-﻿/// <reference path="~/lib/node-vsdoc.js" />
+/// <reference path="~/lib/node-vsdoc.js" />
 
 /**
  * Module dependencies.
@@ -10,6 +10,7 @@ var express = require('express'),
     http = require('http'),
     path = require('path'),
     publish = require('./publish'),
+    mail = require('./mail'),
     start = require('./start'),
     PORT = process.env.PORT || config.env.PORT,
     app = express();
@@ -45,6 +46,8 @@ app.get('/test', function(req, res){
 app.get('/send-cahier/:id', publish.addCahier);
 app.post('/send-cahier/:id', publish.addCahier);
 app.post('/send-picture-cahier/:id', publish.addImage);
+
+app.post('/update-email', mail.updateEmail);
 
 app.get('/getConfig/:id', start.getConfig);
 app.options('/getConfig', function(req, res, next) {
