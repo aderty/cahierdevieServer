@@ -2,19 +2,23 @@
 	"id": "1234",
 	"titre": "titire 2",
 	"date": "2115552",
+	"prenom": "Toto",
 	"desc": "22dfdsf ezf2",
 	"events": [
 		{
+			"time":"10:50",
 			"titre": "dfdffezfze 11",		
 			"desc": "dfdffezfze 11",
 			"pictures": ["/totot/datepicker2.jpg"]		
 		},
 		{
+			"time":"10:50",
 			"titre": "dfdffezfze 12",		
 			"desc": "dfdffezfze 12",
 			"pictures": []		
 		},
 		{
+			"time":"10:50",
 			"titre": "dfdffezfze 12",		
 			"desc": "dfdffezfze 1133",
 			"pictures": ["/totot/datepicker.jpg"]		
