@@ -129,7 +129,7 @@ exports.send = function(email, data, dossier, list, callback) {
     */
 
     /*var to = __dirname + '/tmp/toto.html';
-    fs.writeFile(to, html, function (err) {
+        fs.writeFile(to, html, function (err) {
     });*/
 
     // send mail with defined transport object

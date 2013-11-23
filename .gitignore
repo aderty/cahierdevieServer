@@ -3,7 +3,9 @@ bin/
 obj/
 My Project/
 Properties/
+build/
 sql/
+*.json
 !package.json
 *.sln
 *.suo
