@@ -12,6 +12,8 @@
     <input type="text" id="id" name="id" value="1" />
     <textarea id="template" name="template"></textarea>
     <input type="button" value="Update" onclick="sendForm('form-email', 'update-email')"  />
+    <textarea id="template_temp" name="template_temp"></textarea>
+    <input type="button" value="Replace" onclick="replaceTemplate('template_temp')" />
 </form>
 <script>
     function loadFile(id, url) {
@@ -85,6 +87,11 @@
                 }
             }
         }
+    }
+
+    function replaceTemplate(id) {
+        var text = document.getElementById(id).value;
+        document.getElementById(id).value = text.replace(/#%/gi, "<%").replace(/%#/gi, "%>")
     }
 </script>
 </html>
