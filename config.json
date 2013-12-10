@@ -21,5 +21,10 @@
 	"admin": "julien.goblet@gmail.com",
 	"servers": [
 		"upload.moncahierdevie.com"
-	]
+	],
+	"dropbox": {
+		"app_key":"e42anle8lkz6hww",
+		"token":"TBq6qEVcIQEAAAAAAAAAAaLvoHrXni7Q6ST4jjKOKII5fwLRSuE1cPOEjem3ce9Y",
+		"uid":"242955592"
+	}
 }

@@ -8,7 +8,7 @@ var mongodb = require('mongodb');
 var EventEmitter = require('events').EventEmitter;
 var events = new EventEmitter();
 
-var db, coll;
+var db, emails, users;
 
 mongodb.MongoClient.connect(databaseURI, function (err, database) {
     if (err) {
@@ -16,13 +16,19 @@ mongodb.MongoClient.connect(databaseURI, function (err, database) {
         throw err;
     }
     db = database;
-    coll = db.collection(collection, function(err, email) {
+    emails = db.collection(collection, function(err, email) {
         if (err) throw err;
         module.exports.emails = email;
         events.emit('connected', null);
     });
+    users = db.collection("users", function(err, users) {
+        if (err) throw err;
+        module.exports.users = users;
+        events.emit('users:connected', null);
+    });
 });
 
 module.exports.instance = db;
-module.exports.emails = coll;
+module.exports.emails = emails;
+module.exports.users = users;
 module.exports.events = events;

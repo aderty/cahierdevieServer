@@ -10,6 +10,7 @@ var express = require('express'),
     http = require('http'),
     path = require('path'),
     publish = require('./publish'),
+    user = require('./user'),
     mail = require('./mail'),
     start = require('./start'),
     PORT = process.env.PORT || config.env.PORT,
@@ -40,6 +41,13 @@ console.log("Mise en place des routes");
 // Ajout via POST
 app.get('/test', function(req, res){
     console.log("test");
+    //res.writeHead("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Origin', '*');
+    res.write("<!DOCTYPE html><html><head><title>Mon cahier de vie</title><script src='http://code.jquery.com/jquery-2.0.3.min.js' type='text/javascript'></script></head><body>Hello !</body></html>");
+    res.end();
+});
+app.get('/oauth_callback', function (req, res) {
+    console.log(req.body);
     res.write("ok");
     res.end();
 });
@@ -59,7 +67,8 @@ console.log("/update-email POST -> OK");
 app.get('/getConfig/:id', start.getConfig);
 console.log("/getConfig GET -> OK");
 
-app.options('/getConfig', function(req, res, next) {
+//app.options('/getConfig', function(req, res, next) {
+app.options('*', function (req, res, next) {
         console.log('!OPTIONS');
         var headers = {};
         // IE8 does not allow domains to be specified, just the *
@@ -78,6 +87,8 @@ console.log("/getConfig OPTIONS -> OK");
 app.post('/getConfig', start.getConfig);
 console.log("/getConfig POST -> OK");
 
+app.post('/login/v1', user.routes.login);
+app.post('/new/v1', user.routes.create);
 
 
 //app.post('/images', publish.addImage); // endpoint to post new images
