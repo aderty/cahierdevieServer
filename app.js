@@ -89,6 +89,8 @@ console.log("/getConfig POST -> OK");
 
 app.post('/login/v1', user.routes.login);
 app.post('/new/v1', user.routes.create);
+app.post('/sync/v1', user.routes.sync);
+
 
 
 //app.post('/images', publish.addImage); // endpoint to post new images

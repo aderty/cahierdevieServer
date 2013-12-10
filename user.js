@@ -111,6 +111,35 @@ var routes = {
             dataCallback(res)(err, save);
         });
     },
+    sync: function (req, res) {
+        
+        db.users.findOne({ _id: new db.ObjectID(req.body._id) }, function (err, user) {
+            if (err) console.error(err);
+            else console.log("user trouvé");
+            if (!user) {
+                return dataCallback(res)("Problème d'authentification", user);
+            }
+            db.user_cahiers.find({ user: user._id }).toArray(function (err, users_cahiers) {
+                if (err) console.error(err);
+                else console.log("user_cahiers trouvé");
+                console.log(users_cahiers);
+                if (!users_cahiers || !users_cahiers.length) {
+                    return dataCallback(res)(err, {});
+                }
+                var i = 0, l = users_cahiers.length, ids = [];
+                for(;i<l;i++){
+                    ids.push(users_cahiers[i]._id);
+                }
+                
+                db.cahiers.find({ _id: { $in: ids } }).toArray(function (err, cahiers) {
+                    if (err) console.error(err);
+                    else console.log("cahiers trouvé");
+                    console.log(cahiers);
+                    dataCallback(res)(err, cahiers);
+                });
+            });
+        });
+    },
     password: function(req, res) {
         data.users.passwordTest(req.session.username, req.body.oldPwd, function(err, ret) {
             if (err) {
