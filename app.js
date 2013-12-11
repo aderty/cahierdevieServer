@@ -1,3 +1,4 @@
+
 /// <reference path="~/lib/node-vsdoc.js" />
 
 /**
@@ -23,6 +24,18 @@ app.use(express.bodyParser({
     keepExtensions: true
 }));
 
+// all environments
+app.set('port', PORT);
+app.use(express.favicon());
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// development only
+if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+}
+
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, './public')));
@@ -35,7 +48,7 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
  
-// Mise Ã  jour via POST
+// Mise à jour via POST
 //app.post('/data-users/:id', routes.users.update);
 console.log("Mise en place des routes");
 // Ajout via POST
@@ -90,6 +103,8 @@ console.log("/getConfig POST -> OK");
 app.post('/login/v1', user.routes.login);
 app.post('/new/v1', user.routes.create);
 app.post('/sync/v1', user.routes.sync);
+app.post('/add/v1', user.routes.add);
+app.post('/remove/v1', user.routes.remove);
 
 
 
@@ -97,7 +112,7 @@ app.post('/sync/v1', user.routes.sync);
 //app.get('/images', publish.getImages); // endpoint to get list of images
 
 if (!module.parent) {
-    app.listen(PORT);
+    app.listen(app.get('port'));
     console.log('Server running at http://127.0.0.1:' + PORT);
 }
 

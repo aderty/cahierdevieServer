@@ -1,7 +1,12 @@
 {
-  "name": "cahierdevie",
-  "version": "0.0.1",
-  "main": "app",
+  "name": "cahierdevieServer",
+  "version": "0.0.0",
+  "description": "cahierdevieServer",
+  "main": "app.js",
+  "author": {
+    "name": "Julien",
+    "email": ""
+  },
   "dependencies": {
     "connect": "2.7.X",
     "express": "3.X.X",
