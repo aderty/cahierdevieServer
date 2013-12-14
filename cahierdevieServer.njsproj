@@ -35,13 +35,33 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="db.js" />
+    <Compile Include="dropbox.js" />
+    <Compile Include="mail.js" />
+    <Compile Include="publish.js" />
+    <Compile Include="start.js" />
+    <Compile Include="user.js" />
+    <Content Include=".gitattributes" />
+    <Content Include=".gitignore" />
+    <Content Include="config.json" />
+    <Content Include="emails\first.html" />
+    <Content Include="emails\template1.html" />
+    <Content Include="mails.json" />
     <Content Include="package.json" />
+    <Content Include="Procfile" />
+    <Content Include="public\1234.json" />
+    <Content Include="public\upload.html" />
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
+    <Folder Include="emails\" />
+    <Folder Include="public\" />
+    <Folder Include="tmp\" />
+    <Folder Include="uploads\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="servers.json" />
     <Content Include="Web.config" />
     <Content Include="Web.cloud.config" />
     <Content Include="bin\ChangeConfig.ps1" />
