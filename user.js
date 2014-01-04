@@ -190,6 +190,7 @@ var routes = {
                         console.info("create");
                         dataCallback(res)(err, {
                             _id: newCahier._id.toString(),
+                            users: cahier.users,
                             tick: cahier.tick
                         });
                     });
