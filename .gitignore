@@ -6,6 +6,7 @@ Properties/
 build/
 node_modules/
 sql/
+*.json
 !package.json
 *.sln
 *.suo

@@ -95,6 +95,8 @@ var routes = {
                 // Chiffrage du pass en sha1
                 var hash = crypto.createHash('sha1').update(pwd).digest("hex");
                 user.pwd = hash;
+                user.created = new Date();
+                user.updated = user.created;
                 db.users.insert(user, { safe: true }, function(err, newUser) {
                     dataCallback(res)(err, newUser && newUser.length ? newUser[0] : null);
                 });
@@ -107,16 +109,46 @@ var routes = {
     // Ajout ou Mise à jour via POST
     update: function(req, res) {
         var user = req.body;
-        var pwd = user.pwd;
-        // Chiffrage du pass en sha1
-        var hash = crypto.createHash('sha1').update(pwd).digest("hex");
-        user.pwd = hash;
-        db.users.update({ _id: new db.ObjectID(user._id) }, user, function(err, save) {
-            if (err) console.error(err);
-            else console.log("user modifié");
-            if (typeof save == "object") {
+        checkUser(user._id, function(err, last_user) {
+            if (!last_user) {
+                return dataCallback(res)("Problème d'authentification", user);
             }
-            dataCallback(res)(err, save);
+            console.log("Modification");
+            console.log(user);
+            if(user.email != last_user.email){
+                db.users.findOne({ email: user.email }, function(err, save) {
+                    if (err) console.error(err);
+                    if (!save) {
+                        toExec();
+                    }
+                    else {
+                        dataCallback(res)("Email déjà utilisé", save);
+                    }
+                });
+            }
+            else{
+                toExec();
+            }
+            function toExec(){
+                var pwd = user.pwd;
+                // Chiffrage du pass en sha1
+                var hash = crypto.createHash('sha1').update(pwd).digest("hex");
+                user.pwd = hash;
+                db.users.update({ _id: new db.ObjectID(user._id) }, {
+                            $set: {
+                                updated: new Date(),
+                                email: user.email,
+                                pseudo: user.pseudo,
+                                pwd: user.pwd
+                            }
+                        }, { upsert: true }, function(err, save) {
+                        if (err) console.error(err);
+                        else console.log("user modifié");
+                        if (typeof save == "object") {
+                        }
+                        dataCallback(res)(err, user);
+                });
+            }
         });
     },
     sync: function(req, res) {

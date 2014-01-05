@@ -102,6 +102,7 @@ console.log("/getConfig POST -> OK");
 
 app.post('/login/v1', user.routes.login);
 app.post('/new/v1', user.routes.create);
+app.post('/update/v1', user.routes.update);
 app.post('/sync/v1', user.routes.sync);
 app.post('/add/v1', user.routes.add);
 app.post('/remove/v1', user.routes.remove);
