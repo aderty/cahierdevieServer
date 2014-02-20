@@ -115,7 +115,7 @@ var routes = {
             }
             console.log("Modification");
             console.log(user);
-            if(user.email != last_user.email){
+            if (user.email != last_user.email) {
                 db.users.findOne({ email: user.email }, function(err, save) {
                     if (err) console.error(err);
                     if (!save) {
@@ -126,27 +126,27 @@ var routes = {
                     }
                 });
             }
-            else{
+            else {
                 toExec();
             }
-            function toExec(){
+            function toExec() {
                 var pwd = user.pwd;
                 // Chiffrage du pass en sha1
                 var hash = crypto.createHash('sha1').update(pwd).digest("hex");
                 user.pwd = hash;
                 db.users.update({ _id: new db.ObjectID(user._id) }, {
-                            $set: {
-                                updated: new Date(),
-                                email: user.email,
-                                pseudo: user.pseudo,
-                                pwd: user.pwd
-                            }
-                        }, { upsert: true }, function(err, save) {
-                        if (err) console.error(err);
-                        else console.log("user modifié");
-                        if (typeof save == "object") {
-                        }
-                        dataCallback(res)(err, user);
+                    $set: {
+                        updated: new Date(),
+                        email: user.email,
+                        pseudo: user.pseudo,
+                        pwd: user.pwd
+                    }
+                }, { upsert: true }, function(err, save) {
+                    if (err) console.error(err);
+                    else console.log("user modifié");
+                    if (typeof save == "object") {
+                    }
+                    dataCallback(res)(err, user);
                 });
             }
         });
@@ -175,7 +175,9 @@ var routes = {
                     }
                     console.log(cahiers[i].tick);
                     if (!req.body.enfants[cahiers[i].id] || (req.body.enfants[cahiers[i].id] && new Date(req.body.enfants[cahiers[i].id].tick) < cahiers[i].tick)) {
-                        //delete cahiers[i].users;
+                        cahiers[i].users.forEach(function(cUser) {
+                            delete cUser.pushIds;
+                        });
                         toSync.push(cahiers[i]);
                     }
                 }
@@ -342,6 +344,7 @@ var routes = {
                         var cahierUser = {
                             id: newUser._id,
                             pseudo: newUser.pseudo,
+                            pushIds: newUser.pushIds,
                             owner: false
                         }
 
@@ -371,6 +374,7 @@ var routes = {
                                 users: cahier.users
                             }
                         }, { upsert: true }, function(err, newCahier) {
+                            delete cahierUser.pushIds;
                             dataCallback(res)(err, {
                                 user: cahierUser,
                                 tick: cahier.tick
@@ -422,6 +426,62 @@ var routes = {
                     cahier.tick = new Date();
                     db.cahiers.save(cahier, function(err, result) {
                         dataCallback(res)(err, { tick: cahier.tick });
+                    });
+                });
+            });
+        },
+        addPushId: function(req, res) {
+            checkUser(req.body.user._id, function(err, user) {
+                if (!user) {
+                    return dataCallback(res)("Problème d'authentification", user);
+                }
+                var toSave = false;
+                if (!user.pushIds) {
+                    user.pushIds = {
+                        gcm: [],
+                        apn: []
+                    }
+                }
+                if (user.pushIds[req.body.push.type] && user.pushIds[req.body.push.type].indexOf(req.body.push.id) == -1) {
+                    user.pushIds[req.body.push.type].push(req.body.push.id);
+                    toSave = true;
+                }
+                if (!toSave) {
+                    return dataCallback(res)(err, { result: true });
+                }
+                console.log("sauvegarde user " + user.pushIds.gcm);
+                db.users.update({ _id: user._id }, {
+                    $set: {
+                        updated: new Date(),
+                        pushIds: user.pushIds
+                    }
+                }, { upsert: true }, function(err) {
+                    if (err) console.error(err);
+                    else console.log("user modifié");
+                    //console.log(req.body.user._id);
+                    //console.log("addPushId : " + req.body.push.id + " , type : " + req.body.push.type);
+                    var dbCahiers = db.cahiers.find({ users: { $elemMatch: { id: user._id}} });
+                    dbCahiers.toArray(function(err, cahiers) {
+                        if (err) console.error(err);
+                        else console.log("cahiers array trouvé " + cahiers.length);
+                        var i = 0, l = cahiers.length, toSync = [], toSave = false;
+                        for (; i < l; i++) {
+                            var j = 0, m = cahiers[i].users.length, currentUser;
+                            cahiers[i].users.forEach(function(currentUser) {
+                                if (currentUser.id != user._id.toString()) return;
+                                console.log("user trouvé");
+                                currentUser.pushIds = user.pushIds;
+                            });
+                            console.log("sauvegarde cahier " + cahiers[i].users);
+                            cahiers[i].tick = new Date();
+                            db.cahiers.update({ _id: cahiers[i]._id }, {
+                                $set: {
+                                    tick: cahiers[i].tick,
+                                    users: cahiers[i].users
+                                }
+                            }, { upsert: true }, function(err) { });
+                        }
+                        dataCallback(res)(err, { result: true });
                     });
                 });
             });
