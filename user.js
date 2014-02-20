@@ -1,7 +1,8 @@
 var fs = require('fs'),
     _ = require('underscore'),
     config = require('./config.json'),
-    db = require("./db");
+    db = require("./db"),
+    notify = require("./notify").notify;
 var crypto = require('crypto');
 var shasum = crypto.createHash('sha1');
 shasum.update("utf8");
@@ -483,6 +484,35 @@ var routes = {
                         }
                         dataCallback(res)(err, { result: true });
                     });
+                });
+            });
+        },
+        pushEvent: function(req, res) {
+            checkUser(req.body.user._id, function(err, user) {
+                if (!user) {
+                    return dataCallback(res)("Problème d'authentification", user);
+                }
+                db.cahiers.findOne({ _id: new db.ObjectID(req.body.cahier) }, function(err, cahier) {
+                    if (err) console.error(err);
+                    console.info("cahier");
+                    if (!cahier) {
+                        return dataCallback(res)("Le cahier ne vous appartient pas.", {});
+                    }
+                    var ids = {
+                        gcm: [],
+                        apn: []
+                    }
+                    cahier.users.forEach(function(currentUser){
+                        if (currentUser.id == user._id.toString() || !currentUser.pushIds) return;
+                        console.log(currentUser.pushIds);
+                        ids.gcm = Array.prototype.concat(ids.gcm, currentUser.pushIds.gcm);
+                        ids.apn = Array.prototype.concat(ids.apn, currentUser.pushIds.apn);
+                    });
+                    console.log(ids);
+                    if(ids.gcm.length || ids.apn.le){
+                        notify.pushEvent("Nouvel évènment disponible !", ids);
+                    }
+                    dataCallback(res)(err, { result: true });
                 });
             });
         }

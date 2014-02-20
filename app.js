@@ -109,6 +109,8 @@ app.post('/remove/v1', user.routes.remove);
 app.post('/addUser/v1', user.routes.addUser);
 app.post('/removeUser/v1', user.routes.removeUser);
 app.post('/addPushId/v1', user.routes.addPushId);
+app.post('/pushEvent/v1', user.routes.pushEvent);
+
 
 
 
