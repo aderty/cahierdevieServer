@@ -510,7 +510,7 @@ var routes = {
                     });
                     console.log(ids);
                     if(ids.gcm.length || ids.apn.le){
-                        notify.pushEvent("Nouvel évènment disponible !", ids);
+                        notify.pushEvent(cahier, "Nouvel évènment disponible !", ids);
                     }
                     dataCallback(res)(err, { result: true });
                 });
