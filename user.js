@@ -508,9 +508,8 @@ var routes = {
                         ids.gcm = Array.prototype.concat(ids.gcm, currentUser.pushIds.gcm);
                         ids.apn = Array.prototype.concat(ids.apn, currentUser.pushIds.apn);
                     });
-                    console.log(ids);
-                    if(ids.gcm.length || ids.apn.le){
-                        notify.pushEvent(cahier, "Nouvel évènment disponible !", ids);
+                    if(ids.gcm.length || ids.apn.length){
+                        notify.pushEvent(cahier, req.body.event, "Nouvel évènment disponible !", ids);
                     }
                     dataCallback(res)(err, { result: true });
                 });
