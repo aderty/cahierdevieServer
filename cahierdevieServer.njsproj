@@ -38,6 +38,7 @@
     <Compile Include="db.js" />
     <Compile Include="dropbox.js" />
     <Compile Include="mail.js" />
+    <Compile Include="notify.js" />
     <Compile Include="publish.js" />
     <Compile Include="start.js" />
     <Compile Include="user.js" />
