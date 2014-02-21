@@ -17,6 +17,9 @@ var notify = {
         //message.delayWhileIdle = true; //Default is false
         gcmMessage.timeToLive = 900000;// Duration in seconds to hold in GCM and retry before timing out. Default 4 weeks (2,419,200 seconds) if not specified.
         console.log(ids);
+        console.log(message);
+        console.log("cahier id : " + cahier.id);
+        console.log("cahier.events.length : " + cahier.events.length);
         // At least one reg id required
        // registrationIds.push('APA91bGTIWVKhrENCjzTW25Ai7WRLkuDQKDtzxcXNiHaTwRZflm_jgkqHjmO9JQKnNg1I_JPIx1Oyh0Y5c3SSKBLsnPdMEmmFjSb9kjzOHQOsOKdOskf8DZajnbBkhQBwxvP0ItWFor4');
 
