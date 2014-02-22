@@ -1,4 +1,5 @@
 var gcm = require('node-gcm');
+var apn = require('apn');
 
 //API Server Key
 var gcmSender = new gcm.Sender('AIzaSyAfOFjQDLotJc3IDvLCJmOJ_scltjAQWtQ');
@@ -29,6 +30,38 @@ var notify = {
         gcmSender.send(gcmMessage, ids.gcm, 3, function (result) {
             console.log(result);
         });
+
+        if (!ids.apn || !ids.apn.length) return;
+
+        var callback = function (errorNum, notification) {
+            console.log('Error is: %s', errorNum);
+            console.log("Note " + notification);
+        }
+        var options = {
+            gateway: 'gateway.sandbox.push.apple.com', // this URL is different for Apple's Production Servers and changes when you go to production
+            errorCallback: callback,
+            cert: './key/CahierDeVieCert.pem',
+            key: './key/CahierDeVieKey.pem',
+            passphrase: 'infomil2013',
+            port: 2195,
+            enhanced: true,
+            cacheLength: 100
+        }
+        var apnsConnection = new apn.Connection(options);
+
+        var myDevice;
+
+        var note = new apn.Notification();
+        note.badge = 1;
+        note.sound = "notification-beep.wav";
+        note.alert = { "body": message, "action-loc-key": "Play", "launch-image": "img/icon.png" };
+        note.payload = { 'cahier': cahier.id,  'date': event.date };
+
+        ids.apn.forEach(function (iDevice) {
+            myDevice = new apn.Device(iDevice);
+            note.device = myDevice;
+            apnsConnection.sendNotification(note);
+        })     
     }
 }
 
