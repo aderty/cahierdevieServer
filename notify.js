@@ -52,7 +52,7 @@ var notify = {
         var myDevice;
 
         var note = new apn.Notification();
-        note.badge = 1;
+        note.badge = event.events.length;
         note.sound = "notification-beep.wav";
         note.alert = { "body": message, "action-loc-key": "Play", "launch-image": "img/icon.png" };
         note.payload = { 'cahier': cahier.id,  'date': event.date };
