@@ -509,7 +509,7 @@ var routes = {
                         ids.apn = Array.prototype.concat(ids.apn, currentUser.pushIds.apn);
                     });
                     if(ids.gcm.length || ids.apn.length){
-                        notify.pushEvent(cahier, req.body.event, "Nouvel évènment disponible !", ids);
+                        notify.pushEvent(cahier, req.body.event, cahier.prenom + " : Nouvel évènement disponible !", ids);
                     }
                     dataCallback(res)(err, { result: true });
                 });
