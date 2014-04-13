@@ -497,6 +497,7 @@ var routes = {
                         return dataCallback(res)("L'utilisateur a supprimer non trouvé.", {});
                     }
                     cahier.users[index].state = 0;
+                    cahier.tick = new Date();
                     db.cahiers.update({ _id: cahier._id }, {
                             $set: {
                                 tick: cahier.tick,
