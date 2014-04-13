@@ -287,26 +287,42 @@ var routes = {
 
                 }
                 else {
-                    db.cahiers.update({ _id: cahier._id }, {
-                        $set: {
-                            tick: cahier.tick,
-                            created: cahier.created,
-                            credentials: cahier.credentials,
-                            email: cahier.email,
-                            prenom: cahier.prenom,
-                            photo: cahier.photo,
-                            sexe: cahier.sexe || false,
-                            infos: cahier.infos,
-                            love: cahier.love,
-                            hate: cahier.hate,
-                            tel: cahier.tel,
-                            allergies: cahier.allergies,
-                            birth: cahier.birth
-                        }
-                    }, { upsert: true }, function(err, newCahier) {
+                    db.cahiers.findOne({ _id: cahier._id}, function(err, cahierDb) {
                         if (err) console.error(err);
-                        console.info("update");
-                        return dataCallback(res)(err, { tick: cahier.tick });
+                        console.info("cahier");
+                        if (!cahierDb) {
+                            return dataCallback(res)("Le cahier ne vous appartient pas.", {});
+                        }
+                        var authaurized = false;
+                        cahierDb.users.forEach(function(cUser) {
+                                if(cUser.id && cUser.id.toString() == user._id.toString()){
+                                    authaurized = cUser.state != 0;
+                                }
+                        });
+                        if(!authaurized){
+                               return dataCallback(res)("Vous ne pouvez pas modifier ce cahier");
+                        }
+                        db.cahiers.update({ _id: cahier._id }, {
+                            $set: {
+                                tick: cahier.tick,
+                                created: cahier.created,
+                                credentials: cahier.credentials,
+                                email: cahier.email,
+                                prenom: cahier.prenom,
+                                photo: cahier.photo,
+                                sexe: cahier.sexe || false,
+                                infos: cahier.infos,
+                                love: cahier.love,
+                                hate: cahier.hate,
+                                tel: cahier.tel,
+                                allergies: cahier.allergies,
+                                birth: cahier.birth
+                            }
+                        }, { upsert: true }, function(err, newCahier) {
+                            if (err) console.error(err);
+                            console.info("update");
+                            return dataCallback(res)(err, { tick: cahier.tick });
+                        });
                     });
                 }
             });
