@@ -496,11 +496,24 @@ var routes = {
                         console.info("user not found");
                         return dataCallback(res)("L'utilisateur a supprimer non trouvé.", {});
                     }
-                    cahier.users.splice(1, index);
+                    cahier.users[index].state = 0;
+                    db.cahiers.update({ _id: cahier._id }, {
+                            $set: {
+                                tick: cahier.tick,
+                                users: cahier.users
+                            }
+                        }, { upsert: true }, function(err, newCahier) {
+                            delete cahierUser.pushIds;
+                            dataCallback(res)(err, {
+                                users: cahier.users,
+                                tick: cahier.tick
+                            });
+                    });
+                    /*cahier.users.splice(1, index);
                     cahier.tick = new Date();
                     db.cahiers.save(cahier, function(err, result) {
                         dataCallback(res)(err, { tick: cahier.tick });
-                    });
+                    });*/
                 });
             });
         },
