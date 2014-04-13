@@ -84,7 +84,7 @@ var routes = {
         var user = req.body;
         var pwd = user.pwd;
         user = {
-            email: user.email,
+            email: user.email.toLowerCase(),
             pseudo: user.pseudo,
             pwd: user.pwd
         }
@@ -99,7 +99,37 @@ var routes = {
                 user.created = new Date();
                 user.updated = user.created;
                 db.users.insert(user, { safe: true }, function(err, newUser) {
-                    dataCallback(res)(err, newUser && newUser.length ? newUser[0] : null);
+                    newUser = newUser[0];
+                    var dbCahiers = db.cahiers.find({ users: { $elemMatch: { pseudo: newUser.email.toLowerCase()} }});
+                    dbCahiers.toArray(function(err, cahiers) {
+                        if (err) console.error(err);
+                        else console.log("cahiers array trouvé " + cahiers.length);
+                        var i = 0, l = cahiers.length, toSync = [], toSave = false;
+                        for (; i < l; i++) {
+                            var j = 0, m = cahiers[i].users.length, currentUser;
+                            cahiers[i].users.forEach(function(currentUser, index) {
+                                if (currentUser.pseudo  != newUser.email.toLowerCase()) return;
+                                console.log("user trouvé");
+                                cahiers[i].users[index] = {
+                                    id: newUser._id,
+                                    pseudo: newUser.pseudo,
+                                    email: newUser.email,
+                                    pushIds: newUser.pushIds,
+                                    state: 2,
+                                    owner: false
+                                };
+                            });
+                            console.log("sauvegarde cahier " + cahiers[i].users);
+                            cahiers[i].tick = new Date();
+                            db.cahiers.update({ _id: cahiers[i]._id }, {
+                                $set: {
+                                    tick: cahiers[i].tick,
+                                    users: cahiers[i].users
+                                }
+                            }, { upsert: true }, function(err) { });
+                        }
+                    });
+                    dataCallback(res)(err, newUser);
                 });
             }
             else {
@@ -138,7 +168,7 @@ var routes = {
                 db.users.update({ _id: new db.ObjectID(user._id) }, {
                     $set: {
                         updated: new Date(),
-                        email: user.email,
+                        email: user.email.toLowerCase(),
                         pseudo: user.pseudo,
                         pwd: user.pwd
                     }
@@ -147,6 +177,31 @@ var routes = {
                     else console.log("user modifié");
                     if (typeof save == "object") {
                     }
+
+                    var dbCahiers = db.cahiers.find({ users: { $elemMatch: { id: last_user._id}} });
+                    dbCahiers.toArray(function(err, cahiers) {
+                        if (err) console.error(err);
+                        else console.log("cahiers array trouvé " + cahiers.length);
+                        var i = 0, l = cahiers.length, toSync = [], toSave = false;
+                        for (; i < l; i++) {
+                            var j = 0, m = cahiers[i].users.length, currentUser;
+                            cahiers[i].users.forEach(function(currentUser, index) {
+                                if (currentUser.id  != user._id) return;
+                                console.log("user trouvé");
+                                cahiers[i].users[index].pseudo = user.pseudo;
+                                cahiers[i].users[index].email = user.email.toLowerCase();
+                            });
+                            console.log("sauvegarde cahier " + cahiers[i].users);
+                            cahiers[i].tick = new Date();
+                            db.cahiers.update({ _id: cahiers[i]._id }, {
+                                $set: {
+                                    tick: cahiers[i].tick,
+                                    users: cahiers[i].users
+                                }
+                            }, { upsert: true }, function(err) { });
+                        }
+                    });
+
                     dataCallback(res)(err, user);
                 });
             }
@@ -310,13 +365,13 @@ var routes = {
                 if (!user) {
                     return dataCallback(res)("Problème d'authentification", user);
                 }
-                db.users.findOne({ email: req.body.email }, function(err, newUser) {
+                db.users.findOne({ email: req.body.email.toLowerCase() }, function(err, newUser) {
                     if (err) console.error(err);
                     else console.info("newUser trouvé");
                     console.log(newUser);
-                    if (!newUser) {
+                    /*if (!newUser) {
                         return dataCallback(res)("Aucun utilisateur trouvé.", {});
-                    }
+                    }*/
                     db.cahiers.findOne({ _id: new db.ObjectID(req.body.cahier) }, function(err, cahier) {
                         if (err) console.error(err);
                         console.info("cahier");
@@ -327,27 +382,44 @@ var routes = {
                         var i = 0, l = cahier.users.length, found = false, newFound = false, owner = false, index = -1;
                         for (; i < l; i++) {
 
-                            if (cahier.users[i].id.toString() == user._id.toString()) {
+                            if (cahier.users[i].id && cahier.users[i].id.toString() == user._id.toString()) {
                                 found = true;
                                 index = i;
                                 if (cahier.users[i].owner == true) {
                                     owner = true;
                                 }
                             }
-                            if (cahier.users[i].id.toString() == newUser._id.toString()) {
-                                newFound = true;
+                            if (newUser) {
+                                if(cahier.users[i].id.toString() == newUser._id.toString()){
+                                    newFound = true;
+                                }
                             }
+                            else{
+                                if(cahier.users[i].pseudo == req.body.email.toLowerCase()){
+                                    newFound = true;
+                                }
+                            }
+                        }
+                        if (!owner) {
+                            console.info("not owner");
+                            return dataCallback(res)("Le cahier ne vous appartient pas.", {});
                         }
                         if (!found) {
                             console.info("not found");
                             return dataCallback(res)("Le cahier pas trouvé.", {});
                         }
-                        var cahierUser = {
+                        var cahierUser = newUser ? {
                             id: newUser._id,
                             pseudo: newUser.pseudo,
+                            email: newUser.email,
                             pushIds: newUser.pushIds,
+                            state: 2,
                             owner: false
-                        }
+                        } : {
+                            pseudo: req.body.email.toLowerCase(),
+                            email: req.body.email.toLowerCase(),
+                            state: 1
+                        };
 
                         if (newFound) {
                             console.info("déjà présent");
@@ -355,10 +427,6 @@ var routes = {
                                 user: null,
                                 tick: cahier.tick
                             });
-                        }
-                        if (!owner) {
-                            console.info("not owner");
-                            return dataCallback(res)("Le cahier ne vous appartient pas.", {});
                         }
 
                         cahier.users.push(cahierUser);
@@ -399,25 +467,30 @@ var routes = {
                     console.log(req.body.target);
                     var i = 0, l = cahier.users.length, found = false, owner = false, index = -1;
                     for (; i < l; i++) {
-                        if (cahier.users[i].id.toString() == user._id.toString()) {
+                        if (cahier.users[i].id && cahier.users[i].id.toString() == user._id.toString()) {
                             found = true;
                             if (cahier.users[i].owner == true) {
                                 owner = true;
                             }
                         }
                         else {
-                            if (cahier.users[i].id.toString() == req.body.target) {
+                            if (cahier.users[i].id && cahier.users[i].id.toString() == req.body.target) {
                                 index = i;
                             }
+                            else{
+                                if (cahier.users[i].pseudo && cahier.users[i].pseudo == req.body.target) {
+                                    index = i;
+                                }
+                            }
                         }
-                    }
-                    if (!found) {
-                        console.info("not found");
-                        return dataCallback(res)("Le cahier pas trouvé.", {});
                     }
                     if (!owner) {
                         console.info("not owner");
                         return dataCallback(res)("Le cahier ne vous appartient pas.", {});
+                    }
+                    if (!found) {
+                        console.info("not found");
+                        return dataCallback(res)("Le cahier pas trouvé.", {});
                     }
                     if (index == -1) {
                         console.info("user not found");
