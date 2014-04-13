@@ -392,11 +392,13 @@ var routes = {
                             if (newUser) {
                                 if(cahier.users[i].id.toString() == newUser._id.toString()){
                                     newFound = true;
+                                    index = i;
                                 }
                             }
                             else{
                                 if(cahier.users[i].pseudo == req.body.email.toLowerCase()){
                                     newFound = true;
+                                    index = i;
                                 }
                             }
                         }
@@ -423,13 +425,19 @@ var routes = {
 
                         if (newFound) {
                             console.info("déjà présent");
-                            return dataCallback(res)(err, {
-                                user: null,
-                                tick: cahier.tick
-                            });
+                            if(cahier.users[index].state == 0){
+                                cahier.users[index].state = cahier.users[index].id != undefined ? 2 : 1;
+                            }
+                            else{
+                                return dataCallback(res)(err, {
+                                    user: null,
+                                    tick: cahier.tick
+                                });
+                            }
                         }
-
-                        cahier.users.push(cahierUser);
+                        else{
+                            cahier.users.push(cahierUser);
+                        }
                         cahier.tick = new Date();
                         /*db.cahiers.save(cahier, function(err, result) {
                         dataCallback(res)(err, {
@@ -504,9 +512,7 @@ var routes = {
                                 users: cahier.users
                             }
                         }, { upsert: true }, function(err, newCahier) {
-                            delete cahierUser.pushIds;
                             dataCallback(res)(err, {
-                                users: cahier.users,
                                 tick: cahier.tick
                             });
                     });
