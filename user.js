@@ -334,7 +334,7 @@ var routes = {
                     console.log(cahier);
                     var i = 0, l = cahier.users.length, found = false, owner = false, index = -1;
                     for (; i < l; i++) {
-                        if (cahier.users[i].id.toString() == user._id.toString()) {
+                        if (cahier.users[i].id && cahier.users[i].id.toString() == user._id.toString()) {
                             found = true;
                             index = i;
                             if (cahier.users[i].owner == true) {
@@ -368,7 +368,7 @@ var routes = {
                 db.users.findOne({ email: req.body.email.toLowerCase() }, function(err, newUser) {
                     if (err) console.error(err);
                     else console.info("newUser trouvé");
-                    console.log(newUser);
+
                     /*if (!newUser) {
                         return dataCallback(res)("Aucun utilisateur trouvé.", {});
                     }*/
@@ -378,7 +378,7 @@ var routes = {
                         if (!cahier) {
                             return dataCallback(res)("Le cahier ne vous appartient pas.", {});
                         }
-                        console.log(cahier);
+                        console.log(newUser);
                         var i = 0, l = cahier.users.length, found = false, newFound = false, owner = false, index = -1;
                         for (; i < l; i++) {
 
@@ -390,7 +390,7 @@ var routes = {
                                 }
                             }
                             if (newUser) {
-                                if(cahier.users[i].id.toString() == newUser._id.toString()){
+                                if(cahier.users[i].id && cahier.users[i].id.toString() == newUser._id.toString()){
                                     newFound = true;
                                     index = i;
                                 }
