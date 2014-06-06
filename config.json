@@ -6,19 +6,19 @@
 		"user": "default",
 		"password": "infomil2013",
 		"database": "cahierdevie",
-		"host": "ds053958.mongolab.com",
-		"port": 53958
+		"host": "ds039088.mongolab.com",
+		"port": 39088
 	},
     "secret": "cahier de vie, come on guy !!!",
 	"mail": {
 		"service": "Gmail",
 		"auth": {
-			"user": "cahierdevie1@gmail.com",
+			"user": "moncahierdevie1@gmail.com",
 			"pass": "infomil2013"
 		},
-		"defaultFromAddress": "cahierdevie1@gmail.com"
+		"defaultFromAddress": "moncahierdevie1@gmail.com"
     },
-	"admin": "julien.goblet@gmail.com",
+	"admin": "support@moncahierdevie1.com",
 	"servers": [
 		"upload.moncahierdevie.com"
 	],
